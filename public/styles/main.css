@@ -1,0 +1,169 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans|Roboto:400,700&display=swap");
+
+:root {
+  /* dark shades of primary color*/
+  --clr-primary-1: hsl(205, 86%, 17%);
+  --clr-primary-2: hsl(205, 77%, 27%);
+  --clr-primary-3: hsl(205, 72%, 37%);
+  --clr-primary-4: hsl(205, 63%, 48%);
+  --ff-primary: "Roboto", sans-serif;
+  --ff-secondary: "Open Sans", sans-serif;
+}
+/*
+ * Globals
+ */
+
+/* Links */
+a,
+a:focus,
+a:hover {
+  color: #fff;
+}
+
+/* Custom default button */
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus {
+  text-shadow: none;
+  background-color: rgba(10, 4, 92, 0.788);
+  border: 0.05rem solid #fff;
+}
+
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:focus {
+  text-shadow: none;
+  background-color: rgba(10, 4, 92);
+  border: 0.05rem solid #fff;
+}
+
+/*
+ * Base structure
+ */
+
+html,
+body {
+  height: 100%;
+  box-sizing: border-box;
+  font-family: var(--ff-primary);
+}
+
+#cover-page {
+  background-image: url(/images/veegilbank.jpg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: var(--clr-primary-1);
+}
+
+.cover-main {
+  margin-top: 9rem;
+  color: #fff;
+  background-color: rgba(10, 4, 92, 0.645);
+  width: 50%;
+  border-radius: 8px;
+}
+
+#register-cover,
+#login-cover,
+#user-home,
+#action-cover,
+#bal-cover,
+#trans-cover,
+#t-detail-cover {
+  background-color: var(--clr-primary-1);
+}
+
+#feedback-cover {
+  background-color: var(--clr-primary-1);
+}
+
+#login-cover {
+  padding-top: 7rem;
+}
+
+.reg-form {
+  background-color: cadetblue;
+  width: 60%;
+  border-radius: 8px;
+}
+
+#trans-list {
+  margin-top: 5rem;
+  width: 90%;
+}
+
+#msg-box {
+  margin-top: 7rem;
+}
+
+.reg-form form {
+  width: 80%;
+}
+
+.reg-form form input,
+.reg-form form label {
+  font-family: var(--ff-secondary);
+  font-size: 1.1rem;
+}
+
+.reg-form form input {
+  border-radius: 6px;
+  height: 2rem;
+}
+
+.reg-form form label {
+  color: rgba(10, 4, 92);
+}
+
+nav {
+  padding-top: 2rem;
+}
+
+nav a {
+  font-family: var(--ff-secondary);
+  font-size: 1rem;
+  padding: 0.5rem;
+}
+
+.nav .nav-link {
+  color: #fff;
+}
+
+#action-form {
+  margin-top: 4rem;
+  padding-bottom: 0.5rem;
+}
+
+#bal-form {
+  margin-top: 7rem;
+  padding-bottom: 0.5rem;
+}
+
+.feed_back {
+  display: none;
+  font-size: 1.6rem;
+}
+
+.action-btn {
+  width: 40%;
+  height: 2.5rem;
+  cursor: pointer;
+  position: relative;
+  top: 2rem;
+}
+
+footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(10, 4, 92);
+  color: white;
+  text-align: center;
+}
+
+footer p {
+  position: relative;
+  top: 0.5rem;
+}

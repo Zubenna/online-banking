@@ -1,0 +1,25 @@
+<%- include('../partials/_head') -%>
+<body id="user-home">
+
+<%- include('../partials/_nav') -%>
+ <main>
+          <!-- <div>
+            <img src="<%= data.image %>" width="50" class="img-thumbnail"/>
+          </div> -->
+          <div class="user-name d-flex justify-content-end text-white pt-3 pe-5">
+            <p class="p-1">
+              <%= data.first_name %>
+            </p>
+            <p class="p-1">
+              <%= data.last_name %>
+            </p>
+          </div>
+    <div class="msg-box text-center text-white">
+      <h3>Welcome to your account profile</h3>
+      <h4>This is Veegil Bank Limited. Your money is secured with us </h4>
+      <h5>You carry out all your transactions</h5>
+    </div>
+ </main>
+<%- include('../partials/_footer') -%>
+</body>
+</html>
