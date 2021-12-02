@@ -1,0 +1,22 @@
+<%- include('../partials/_head') -%>
+    <body id="bal-cover">
+        <%- include('../partials/_nav') -%>
+            <h3 class="text-center mx-auto text-white btn-secondary action-btn">Check Your Balance</h3>
+            <div class="reg-form mx-auto">
+                <form action="/api/transaction/balance" method="POST" class="pt-4 mx-auto" id="bal-form">
+                    <div class="mb-1 row">
+                        <label class="form-label col-md-4 col-form-label" for="acc_number">Account Number</label>
+                        <input class="col-md-8" type="text" name="acc_number"
+                            placeholder="Your phone number is your account number" required />
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <input id="balBtn" class="px-5" type="submit" name="submit" value="Submit" />
+                    </div>
+                </form>
+            </div>
+            <br>
+            <script src="/script/main.js"></script>
+            <%- include('../partials/_footer') -%>
+    </body>
+
+    </html>

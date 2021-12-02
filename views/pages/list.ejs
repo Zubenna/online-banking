@@ -1,0 +1,48 @@
+<%- include('../partials/_head') -%>
+    <body id="t-detail-cover">
+        <%- include('../partials/_nav') -%>
+            <h3 class="text-center mx-auto text-white btn-secondary action-btn">Transaction History</h3>
+            
+            <div class="mx-auto" id="trans-list">
+                <table class="table table table-hover table-success table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">S/N</th>
+                            <th scope="col">Acc Number</th>
+                            <th scope="col">Ammount</th>
+                            <th scope="col">Trans Type</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Comment</th>
+                            <th scope="col">Date</th>
+                        </tr>
+                    </thead>
+            <tbody>
+                <% for(let i=0; i < data.length; i++) { %>
+                <tr>
+                    <td><%= i+1 %></td>
+                    <td>
+                        <%= data[i].acc_number %>
+                    </td>
+                    <td>
+                        <%= data[i].amount %>
+                    </td>
+                    <td>
+                        <%= data[i].trans_type %>
+                    </td>
+                    <td>
+                        <%= data[i].description %>
+                    </td>
+                    <td>
+                        <%= data[i].comment %>
+                    </td>
+                    <td>
+                        <%= data[i].date %>
+                    </td>
+                </tr>
+                <% } %>
+                </tbody>
+                </table>
+            </div>
+            <%- include('../partials/_footer') -%>
+    </body>
+</html>
