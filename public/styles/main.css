@@ -89,12 +89,28 @@ body {
 }
 
 #trans-list {
-  margin-top: 5rem;
+  margin-top: 7rem;
   width: 90%;
 }
 
 #msg-box {
   margin-top: 7rem;
+}
+
+.msg-holder {
+  height: 1.1rem;
+  position: relative;
+  top: 0;
+  right: 0;
+}
+
+#msg-login {
+  padding-bottom: 2.5rem;
+}
+
+.status-msg {
+  height: 1rem;
+  padding: 1rem;
 }
 
 .reg-form form {

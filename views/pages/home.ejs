@@ -1,12 +1,22 @@
 <%- include('../partials/_head') -%>
 <body id="user-home">
-
-<%- include('../partials/_nav') -%>
+  <div class="msg-holder d-flex justify-content-end">
+  <% if (message) { %>
+    <div class="d-flex justify-content-end align-items-center status-msg alert alert-dismissible fade show alert-<%= type %>" role="alert" >
+      <strong>
+        <%= message %>
+      </strong>
+      <button class="btn-close position-relative" type="button" data-bs-dismiss="alert" aria-label="close"></button>
+    </div>
+    <% } %>
+  </div>
+  <%- include('../partials/_nav') -%>
  <main>
-          <!-- <div>
-            <img src="<%= data.image %>" width="50" class="img-thumbnail"/>
-          </div> -->
-          <div class="user-name d-flex justify-content-end text-white pt-3 pe-5">
+          <div class="ps-5">
+            <img src="/<%= data.image %>" width="100" height="100" class="img-thumbnail" />
+          </div>
+          <div class="profile-info d-flex justify-content-between">
+          <div class="user-name d-flex justify-content-end text-white pt-3 ps-5">
             <p class="p-1">
               <%= data.first_name %>
             </p>
@@ -14,6 +24,11 @@
               <%= data.last_name %>
             </p>
           </div>
+          <div class="d-flex text-white pt-3 pe-5">
+            <h4 class="pe-4">Account number</h4>
+            <h4><%= data.phone_number %></h4>
+          </div>
+        </div>
     <div class="msg-box text-center text-white">
       <h3>Welcome to your account profile</h3>
       <h4>This is Veegil Bank Limited. Your money is secured with us </h4>

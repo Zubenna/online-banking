@@ -18,14 +18,14 @@ router.post('/action', async (req, res) => {
         // validate and perform deposit;
         if (trans_type === 'deposit') {
             if (!(amount > 0)) {
-                return res.render("pages/feedback", { msg: 'Amount cannot be empty' });
+                return res.status(400).render("pages/feedback", { msg: 'Amount cannot be empty' });
             }
             newBalance = prevBalance + amount
         }
         // validate and perform withdrawal
         if (trans_type === 'withdraw') {
             if (!(prevBalance - amount > 0)) {
-                return res.render("pages/feedback",{ msg: 'You cannot withdraw at this time, Please check your balance' });
+                return res.status(400).render("pages/feedback",{ msg: 'You cannot withdraw at this time, Please check your balance' });
             }
             newBalance = prevBalance - amount;
         }
@@ -37,7 +37,7 @@ router.post('/action', async (req, res) => {
         const record = await Transaction.create({ acc_number, date: new Date(), amount, description, comment, trans_type });
         await User.updateOne({ _id: user.id }, { $push: { "records": record } });
         
-        res.render("pages/feedback", { msg: `Current balance is ${newBalance}` });
+        res.status(200).render("pages/feedback", { msg: `Current balance is ${newBalance}` });
     
     } catch (err) {
        res.render("pages/feedback", { msg: 'An error has occured during this transaction' })

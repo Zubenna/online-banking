@@ -1,7 +1,19 @@
 <%- include('../partials/_head') -%>
 <body id="register-cover">
 <h3 class="text-center text-white py-2">To have account in our bank, Please register</h3>
-    <div class="reg-form mx-auto p-2">
+<div class="reg-form mx-auto p-2">
+    <div class="msg-holder d-flex justify-content-center" id="msg-register">
+        <% if (typeof msg !=="undefined" ) { %>
+            <div class="d-flex justify-content-end align-items-center status-msg alert alert-dismissible fade show alert-<%= type %>"
+                role="alert">
+                <strong>
+                    <%= msg %>
+                </strong>
+                <button class="btn-close position-relative" type="button" data-bs-dismiss="alert"
+                    aria-label="close"></button>
+            </div>
+        <% } %>
+    </div>
         <form action="/api/bank/createUser" method="POST" enctype="multipart/form-data" class="pt-4 mx-auto">
           <div class="mb-1 row">
               <label class="form-label col-md-4 col-form-label" for="first_name">First Name</label>

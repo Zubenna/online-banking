@@ -1,19 +1,22 @@
-const jwt = require("jsonwebtoken");
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+dotenv.config();
+
 const verifyToken = async (req, res, next) => {
-  const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
-  if (!token) {
-    return res.status(403).send("A token is required for authentication");
-  }
+  const token = req.cookies.token || '';
   try {
-     const decoded = await jwt.verify(token, process.env.TOKEN_SECRET)
-     req.user = decoded;
-    //  next();
+    if (!token) {
+      return res.status(401).json('Authorization fail')
+    }
+    const decrypt = await jwt.verify(token, process.env.TOKEN_SECRET);
+      req.user = {
+      id: decrypt.id,
+      username: decrypt.username,
+    };
+    next();
   } catch (err) {
-    return res.status(401).send("Invalid Token");
+    return res.status(500).json(err.toString());
   }
-  return next();
 };
 
 module.exports = verifyToken;
-

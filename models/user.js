@@ -58,8 +58,9 @@ const userSchema = new Schema ({
     },
     image: {
         type: String,
-        default: null,
-        required: [true, 'Upload your picture please']
+        data: Buffer,
+        contentType: String,
+        required: [true, 'Upload your picture please'],
     },
     balance: {
         type: Number,
