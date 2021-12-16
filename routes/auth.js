@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const jwt = require("jsonwebtoken");
+const generateToken = require("../helper/generateToken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 const auth = require("../middleware/checkAuth");
@@ -11,31 +12,16 @@ const storage = multer.diskStorage({
     cb(null, "./uploads");
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      new Date().toISOString().replace(/:/g, "-") + "-" + file.originalname
-    );
-    // cb(null, file.filename + "_" + Date.now() + "_" + file.originalname);
+  cb(null, file.fieldname + "_" + Date.now() + "_" + file.originalname);
   },
 });
 
-const filefilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
-  ) {
-    cb(null, true);
-  } else {
-    cb(null, false);
-  }
-};
 const upload = multer({
   storage: storage,
-  fileFilter: filefilter,
 }).single("image");
 
-router.post("/createUser", upload, async (req, res) => {
+router.post("/createUser", upload, async (req, res, next) => {
+// Get user details
   try {
     let {
       first_name,
@@ -45,17 +31,26 @@ router.post("/createUser", upload, async (req, res) => {
       username,
       address,
       password,
-      phone_number,
+      phone_number
     } = req.body;
 
+    // Production
     const image = req.file.filename;
 
+    // Testing
+    // const image = "image_1638948692972_Angel-1.jpg";
+    
+    // Vallidate number of phone digits
     let myRegex = /^[0-9]{11}$/;
     if (!phone_number.match(myRegex)) {
-      res.status(400).send({ msg: "Phone number must be 11 digits only" });
+       
+      res.status(400).render("pages/register", {
+       type: 'danger',
+       msg: 'Phone number must be 11 digits only'
+     });
       return;
     }
-
+    // Check required fields
     if (
       !(
         first_name &&
@@ -71,29 +66,48 @@ router.post("/createUser", upload, async (req, res) => {
       res.status(400).send({ msg: "Required fields must not be empty" });
       return;
     }
+    // Check dupllicate email
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
-      res.status(400).send({ msg: "Email already exist" });
+      res.status(400).render("pages/register", {
+       type: 'danger',
+       msg: 'Email already exist'
+     });
       return;
     }
+    // Check dupllicate username
     const existingUname = await User.findOne({ username });
     if (existingUname) {
-      res.status(400).send({ msg: "Username already exist" });
+      res.status(400).render("pages/register",
+      {
+       type: 'danger',
+       msg: 'Username already exist'
+     });
       return;
     }
+     // Check username length
     const nameLength = username.length;
     if (!(nameLength > 7 && nameLength < 16)) {
-      res.status(400).send({ msg: "Username must be in the range 8 - 15 characters" });
+      res.status(400).render("pages/register", {
+       type: 'danger',
+       msg: 'Username must be in the range 8 - 15 characters'
+     });
       return;
     }
+     // Check dupllicate phone number
     const existingNumber = await User.findOne({ phone_number });
     if (existingNumber) {
-      res.status(400).send({ msg: "Phone Number already exist" });
+      res.status(400).render("pages/register", {
+       type: 'danger',
+       msg: 'Phone Number already exist'
+     })
       return;
     }
+     // Encrypt password
     const salt = await bcrypt.genSalt(10);
     password = await bcrypt.hash(password, salt);
-
+    
+     // Create user
     const user = await User.create({
       first_name,
       middle_name,
@@ -103,26 +117,20 @@ router.post("/createUser", upload, async (req, res) => {
       username,
       password,
       phone_number,
-      image,
+      image
     });
-
-    //  Create token
-    const token = jwt.sign(
-      { user_id: user._id, username },
-      process.env.TOKEN_SECRET,
-      {
-        expiresIn: "2h",
-      }
-    );
-
-    // save user token
-    user.token = token;
-    res.redirect('/api/bank');
+    
+    // return res.redirect(301, '/api/bank');
+    return res.status(200).render("pages/cover", {
+       type: 'success',
+       msg: 'Registraton Successful. Please login'
+    });
     
   } catch (err) {
-    res.status(500).json({
-      msg: "An error occured",
-    });
+     res.status(500).render("pages/register", {
+       type: 'danger',
+       msg: 'Error occurred during registration'
+     })
   }
 });
 
@@ -133,36 +141,47 @@ router.post("/loginUser", async (req, res) => {
 
     // Validate user input
     if (!(username && password)) {
-      return res.status(400).send({ msg: "All required fields must be filled" });
+      return res.status(400).render('pages/login');
     }
 
     // Validate if user exist in our database
     const user = await User.findOne({ username });
-
+     
     if (user && (await bcrypt.compare(password, user.password))) {
-      // Create token
-      const token = jwt.sign(
-        { user_id: user._id, username },
-        process.env.TOKEN_SECRET,
-        {
-          expiresIn: "2h",
-        }
-      );
-      // save user token
-      user.token = token;
-      return res.render('pages/home', {
-        data: user
+    
+    //  Create token
+      const id = user._id;
+      await generateToken(res, id, username);
+
+    // Store user details in session
+       req.session.user = {
+         first_name: user.first_name,
+         last_name: user.last_name,
+         phone_number: user.phone_number,
+         image: user.image
+      };
+
+      return res.status(200).render('pages/home', {
+        data: req.session.user,
+        message: "You are logged in",
+        type: 'success'
       });
     }
-    return res.status(400).send({ msg: "Invalid Credentials" });
+
+    return res.status(400).render('pages/login', {
+      msg: "Invalid credentials",
+      type: 'danger'
+    })
+
   } catch (err) {
-    res.send({
-      msg: "There is error logging in"
-    });
+    res.render('pages/login', {
+      msg: "There is error logging in",
+      type: 'danger'
+    })
   }
 });
 
-router.get("/logoutUser", (req, res) => {
+router.get("/logoutUser", auth, (req, res, next) => {
   const authHeader = req.headers["authorization"];
   jwt.sign(authHeader, "", { expiresIn: 1 }, (logout, err) => {
     if (logout) {
@@ -186,17 +205,14 @@ router.get("/listAll", async (req, res) => {
   }
 });
 
-router.post("/singleFileUpload", async (req, res, next) => {
-  try {
-    const file = req.file;
-    res.status(201).send({ msg: "File Upload Successfully" });
-  } catch (error) {
-    res.status(400).send({ msg: "Error occured" });
-  }
-});
-
 router.get("/", (req, res) => {
   res.render('pages/cover');
+});
+
+router.get("/tohome", (req, res) => {
+  res.render('pages/home', {
+        data: req.session.user,
+  });
 });
 
 router.get("/register", (req, res) => {
@@ -207,23 +223,19 @@ router.get("/login", (req, res) => {
   res.render("pages/login");
 });
 
-router.get("/index", (req, res) => {
-  res.render("pages/home");
-});
-
-router.get("/action", (req, res) => {
+router.get("/action", auth, (req, res) => {
   res.render("pages/action");
 });
 
-router.get("/balance", (req, res) => {
+router.get("/balance", auth, (req, res) => {
   res.render("pages/balance");
 });
 
-router.get("/transfer", (req, res) => {
+router.get("/transfer", auth, (req, res) => {
   res.render("pages/transfer");
 });
 
-router.get("/trans-details", (req, res) => {
+router.get("/trans-details", auth, (req, res) => {
   res.render("pages/trans-details");
 });
 

@@ -1,12 +1,23 @@
 <%- include('../partials/_head') -%>
 <body id='cover-page'>
-
     <nav class="d-flex justify-content-end p-3">
         <div class="">
             <a href="/api/bank/register" class="btn btn-secondary fs-5 text-white me-4 px-2">Register</a>
             <a href="/api/bank/login" class="btn btn-secondary fs-5 text-white px-2">Login</a>
         </div>
     </nav>
+    <div class="msg-holder d-flex justify-content-center" id="msg-cover">
+        <% if (typeof msg !=="undefined" ) { %>
+            <div class="d-flex justify-content-end align-items-center status-msg alert alert-dismissible fade show alert-<%= type %>"
+                role="alert">
+                <strong>
+                    <%= msg %>
+                </strong>
+                <button class="btn-close position-relative" type="button" data-bs-dismiss="alert"
+                    aria-label="close"></button>
+            </div>
+            <% } %>
+    </div>
     <main class="cover-main mx-auto text-center p-4">
         <h1>Welcome to Veegil Bank Limited</h1>
         <h4 class="mt-4">With us, Your money is secured</h4>
