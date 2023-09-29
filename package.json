@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --runInBand --testTimeout=20000 --detectOpenHandles --forceExit",
     "test:watch": "jest --watch",
-    "start": "nodemon start.js"
+    "start": "node start.js"
   },
   "repository": {
     "type": "git",
